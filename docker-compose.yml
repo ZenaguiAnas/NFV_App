@@ -19,14 +19,25 @@ services:
       - firewall_network
       - shared_network
     depends_on:
-      - backend
+      - backend1
+      - backend2
 
-  backend:
+  backend1:
     build:
       context: .
       dockerfile: BackendDockerfile
     ports:
       - "5001:5001"
+    networks:
+      - backend_network
+      - shared_network
+
+  backend2:
+    build:
+      context: .
+      dockerfile: BackendDockerfile
+    ports:
+      - "5002:5001"
     networks:
       - backend_network
       - shared_network
