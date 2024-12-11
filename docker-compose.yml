@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  firewall_network:
+    driver: bridge
+  backend_network:
+    driver: bridge
+  shared_network:
+    driver: bridge
+
+services:
+  firewall:
+    build:
+      context: .
+      dockerfile: FirewallDockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - firewall_network
+      - shared_network
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: BackendDockerfile
+    ports:
+      - "5001:5001"
+    networks:
+      - backend_network
+      - shared_network
