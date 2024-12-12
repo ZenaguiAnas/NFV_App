@@ -106,17 +106,35 @@ def manage_rules():
         return jsonify({"blocked_ips": blocked_ips, "blocked_ports": blocked_ports}), 200
     elif request.method == 'POST':
         rule = request.json
-        blocked_ips.extend(rule.get("ips", []))
-        blocked_ports.extend(rule.get("ports", []))
+        ips = rule.get("ips", [])
+        ports = rule.get("ports", [])
+        
+        # Add new IPs and Ports to the blocked lists
+        for ip in ips:
+            if ip not in blocked_ips:
+                blocked_ips.append(ip)
+        for port in ports:
+            if port not in blocked_ports:
+                blocked_ports.append(port)
+
+        logger.info(f"New rule added: {ips} (IPs), {ports} (Ports)")
+
         return jsonify({"status": "rules updated"}), 200
     elif request.method == 'DELETE':
         rule = request.json
-        for ip in rule.get("ips", []):
+        ips = rule.get("ips", [])
+        ports = rule.get("ports", [])
+
+        # Remove IPs and Ports from the blocked lists
+        for ip in ips:
             if ip in blocked_ips:
                 blocked_ips.remove(ip)
-        for port in rule.get("ports", []):
+        for port in ports:
             if port in blocked_ports:
                 blocked_ports.remove(port)
+
+        logger.info(f"Rule deleted: {ips} (IPs), {ports} (Ports)")
+
         return jsonify({"status": "rules deleted"}), 200
 
 if __name__ == "__main__":

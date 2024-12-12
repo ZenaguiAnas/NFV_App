@@ -8,7 +8,7 @@ WORKDIR /app
 COPY firewall.py .
 
 # Install dependencies
-RUN pip install flask requests
+RUN pip install flask requests flask-cors
 
 # Expose the port the app runs on
 EXPOSE 5000
